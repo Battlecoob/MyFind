@@ -29,6 +29,7 @@ void PrintUsage(string ProgrammName)
 // int main(int argc, string argv[])
 int main(int argc, char* argv[])
 {
+    std::cout << "Test" << std::endl;
     /*
     std::cout << "start..." << std::endl;
     int c;
