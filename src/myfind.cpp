@@ -19,8 +19,6 @@
 using std::cout; using std::endl;
 using std::string;
 
-
-
 void PrintUsage(string ProgrammName)
 {
     cout << "Usage: " << ProgrammName << " [-R] [-i] searchpath filename1 [filename2] ...[filenameN]" << endl;
@@ -29,14 +27,6 @@ void PrintUsage(string ProgrammName)
 // int main(int argc, string argv[])
 int main(int argc, char* argv[])
 {
-    /*
-    std::cout << "start..." << std::endl;
-    int c;
-    std::string FileName, ProgramName;
-    unsigned short RArgumentCounter, iArgumentCounter;
-
-    ProgramName = argv[0];
-    std::cout << ProgramName << std::endl;
-    */
+    cout << "Hello, Jacob!" << endl;
     return 0;
 }
