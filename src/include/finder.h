@@ -14,8 +14,16 @@ private:
     std::vector<std::string> _fileNames;
 
 public:
-    finder(int pid, bool caseSensitiv, bool recursiveSearch, std::vector<std::string> filenames);
+    finder(std::vector<std::string> filenames);
+    void SetPid(int pid);
+    void SetCaseSensitiviy(bool b);
+    void SetRecursiveSearch(bool b);
+    void SetFilePath(std::vector<std::string> path);
+    void SetFileName(std::vector<std::string> file);
 
+    const int GetPid() { return _pid; }
+    const bool GetCaseSensitivity() { return _caseSensitiv; }
+    const bool GetRecursiveSearch() { return _recursiveSearch; }
     // main searchfunc
     // .toLowerCase() for case insesitivity
     // recursive prob. doesn't need a stand alone func
