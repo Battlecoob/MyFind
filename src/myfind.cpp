@@ -1,87 +1,66 @@
-/*
-* =======================================================================================================================================
-*
-*
-*                                                   Programm Description
-*
-*
-* =======================================================================================================================================
-*/
+#include "include/myfind.hpp"
 
-
-#include <iostream>
-#include <assert.h>
-#include <unistd.h> // for getopt();
-#include <vector>
-// temp weil ich das Makefile nicht verstehe
-#include "include/finder.h"
-
-using std::cout; using std::endl;
-using std::string; using std::cerr;
-
-void PrintUsage(string ProgrammName)
+MyFind::MyFind(/* args */)
 {
-    cout << "Usage: " << ProgrammName << " [-R] [-i] searchpath filename1 [filename2] ...[filenameN]" << endl;
+    _programName = "";
+    _caseSensitiv = false;
+    _recursiveSearch = false;
 }
 
-// int main(int argc, string argv[])
-int main(int argc, char* argv[])
+void MyFind::fork() 
 {
-    std::cout << "Starting MyFind..." << std::endl;
+    // not implemented
+}
 
-    int c;
-    std::string FileName = "", ProgramName = "";
-    unsigned short RArgumentCounter = 0, iArgumentCounter = 0;
-    
-    //testing
-    std::vector<string> TestTmp;
-    TestTmp.push_back("test.cpp");
-    finder Finder(TestTmp);
-    ProgramName = argv[0]; // full path! Selber Fehler, dass ich das Programm nicht ueber die command line ausueben kan
+void MyFind::waitForChildren()
+{
+    // not implemented
+}
 
-    while((c = getopt(argc, argv, "Ri:")) != EOF) 
+void MyFind::printUsage()
+{
+    std::cout << "Usage: " << _programName << " [-R] [-i] searchpath filename1 [filename2] ...[filenameN]" << std::endl;
+}
+
+void MyFind::printOutput()
+{
+    // not implemented
+}
+
+void MyFind::KillTheUndead()
+{
+    // not implemented
+}
+
+bool MyFind::ReadArguments(int argc, char*argv[])
+{
+    int input = 0;
+    bool err = false;
+    _programName = argv[0]; // ./myfind
+
+    while((input = getopt(argc, argv, "iR")) != EOF)
+    //  ehemaliger error: "iR:" ... ':' -> R hat einen Parameter und ist kein switch
     {
-        switch (c)
+        switch(input)
         {
-            case '?': // unknown
-                // fprintf( stderr, "%s error: Unknown option.\n", programm_name );
-                cerr << ProgramName << " error: Unknown option" << endl;
-                PrintUsage(ProgramName); // should contain a string...if not .toString()
-                break;
             case 'R':
-                RArgumentCounter++;
-                Finder.SetRecursiveSearch(true);
+                CounterR++;
+                _recursiveSearch = true;
                 break;
             case 'i':
-                iArgumentCounter++;
-                Finder.SetCaseSensitiviy(true);
+                CounterI++;
+                _caseSensitiv = true;
                 break;
-            default: // impossible
-                assert(0);
+            case '?':
+                std::cerr << _programName << " error: Unknown option." << std::endl;
+                printUsage();
+                err = true;
+                break;
+            default: //impossible
+                assert(0); // 0 -> logisch falsch
+                break;
         }
     }
 
-    // check for counters || Error handling
-    if (( RArgumentCounter > 1 ) || ( iArgumentCounter > 1 )) 
-    {
-        cerr << ProgramName << " Fehler: Optionen wurden mehrfach verwendet." << endl;
-        exit(1);
-    }
-
-    if ( optind < argc ) 
-    {
-        printf("ARGV Elemente ohne Optionen: ");
-        while ( optind < argc ) 
-        {
-            cout << argv[optind++] << endl;
-        }
-        printf("\n");
-    } 
-    else if ( optind >= argc ) 
-    {
-        cerr << "Fehler: Es wurden Optionen, die Argumente erwarten, ohne Argumente befuellt." << endl;
-        exit(EXIT_FAILURE);
-    }
-    
-    return 0;
+    return true;
 }

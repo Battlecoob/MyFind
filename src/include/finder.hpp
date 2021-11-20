@@ -1,31 +1,30 @@
-#include <iostream>
 #include <vector>
+#include <iostream>
+#include <list>
 
 #ifndef FINDER_H
 #define FINDER_H
 #endif
 
-class finder
+class Finder
 {
 private:
     int _pid;
     bool _caseSensitiv, _recursiveSearch;
-    std::vector<std::string> _filePath;
+    std::string _filePath;
     std::vector<std::string> _fileNames;
 
 public:
-    finder(std::vector<std::string> filenames);
+    Finder();
     void SetPid(int pid);
-    void SetCaseSensitiviy(bool b);
-    void SetRecursiveSearch(bool b);
     void SetFilePath(std::vector<std::string> path);
-    void SetFileName(std::vector<std::string> file);
 
     const int GetPid() { return _pid; }
     const bool GetCaseSensitivity() { return _caseSensitiv; }
     const bool GetRecursiveSearch() { return _recursiveSearch; }
-    // main searchfunc
-    // .toLowerCase() for case insesitivity
-    // recursive prob. doesn't need a stand alone func
-};
 
+    std::string ToLower(std::string input);
+    int Find(std::string FileName, const char* path);
+    int Search(std::list<std::string> Content, std::string FileName);
+    int CaseSensitiveSearch(std::list<std::string> Content, std::string FileName);
+};
