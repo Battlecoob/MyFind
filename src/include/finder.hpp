@@ -15,7 +15,7 @@ private:
     std::vector<std::string> _fileNames;
 
 public:
-    Finder();
+    Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::vector<std::string> fileNames);
     void SetPid(int pid);
     void SetFilePath(std::vector<std::string> path);
 

@@ -35,7 +35,6 @@ void MyFind::KillTheUndead()
 bool MyFind::ReadArguments(int argc, char*argv[])
 {
     int input = 0;
-    bool err = false;
     _programName = argv[0]; // ./myfind
 
     while((input = getopt(argc, argv, "iR")) != EOF)
@@ -54,7 +53,7 @@ bool MyFind::ReadArguments(int argc, char*argv[])
             case '?':
                 std::cerr << _programName << " error: Unknown option." << std::endl;
                 printUsage();
-                err = true;
+                // throw exception
                 break;
             default: //impossible
                 assert(0); // 0 -> logisch falsch
@@ -62,5 +61,29 @@ bool MyFind::ReadArguments(int argc, char*argv[])
         }
     }
 
+    if(CounterR > 1 || CounterI > 1) // wird auch aufgerufen wenn case '?': ... lul
+    {
+        std::cerr << _programName << " error: Too many arguments." << std::endl;
+        printUsage();
+        //throw exception
+    }
+
+    _filePath = argv[optind];
+    optind++;
+
+    for (int c = optind; c < argc; c++)
+        _fileNames.push_back(argv[optind]);
+    
+    //  Test ob alle Argumente richtig eingelesen und bearbeitet werden
+    /*
+    std::cout << "Case Sens: " << _caseSensitiv << std::endl;
+    std::cout << "Recursive: " << _recursiveSearch << std::endl;
+    std::cout << "Path: " << _filePath << std::endl;
+    for (int i = 0; i < _fileNames.size(); i++)
+    {
+        std::cout << "File: " << _fileNames[i] << std::endl;
+    }
+    */
+    
     return true;
 }

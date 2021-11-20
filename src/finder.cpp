@@ -1,5 +1,12 @@
 #include "include/finder.hpp"
 
+Finder::Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::vector<std::string> fileNames)
+{
+    _caseSensitiv = caseSensitiv;
+    _recursiveSearch = recursiveSearch;
+    _filePath = path;
+    _fileNames = fileNames;
+}
 // Finder::Finder(std::vector<std::string> filenames)
 // {
 //     _fileNames = filenames; // ? weiss nicht, ob man einfach so einen vector string kopieren kann -> testen! ... gehoert mit .pushback

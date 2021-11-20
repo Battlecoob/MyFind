@@ -23,6 +23,7 @@ private:
     void printUsage();
     void printOutput();
     void waitForChildren();
+    void createFinder(Finder &finder);
 
 public:
     MyFind(/* args */);
