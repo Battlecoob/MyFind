@@ -23,7 +23,6 @@ private:
     void printUsage();
     void printOutput();
     void waitForChildren();
-    void createFinder(Finder &finder);
 
 public:
     MyFind(/* args */);
@@ -35,5 +34,6 @@ public:
     const bool GetRecursiveSearch() { return _recursiveSearch; }
     
     void KillTheUndead();
+    Finder createFinder();
     bool ReadArguments(int argc, char* argv[]);
 };

@@ -12,6 +12,7 @@ void MyFind::fork()
     // not implemented
 }
 
+
 void MyFind::waitForChildren()
 {
     // not implemented
@@ -30,6 +31,12 @@ void MyFind::printOutput()
 void MyFind::KillTheUndead()
 {
     // not implemented
+}
+
+Finder MyFind::createFinder()
+{
+    Finder finder(_caseSensitiv, _recursiveSearch, _filePath, _fileNames);
+    return finder;
 }
 
 bool MyFind::ReadArguments(int argc, char*argv[])

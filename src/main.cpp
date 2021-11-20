@@ -23,12 +23,11 @@ int main(int argc, char* argv[])
     std::cout << "Starting MyFind..." << std::endl;
     // obj. instanzieren
     MyFind myFind;
-    Finder finder;
     
     // wenn argumente eingegeben wurden, starte das programm
     if(myFind.ReadArguments(argc, argv))
     {
-        // do smth
+        myFind.createFinder();
     }
     return 0;
 }

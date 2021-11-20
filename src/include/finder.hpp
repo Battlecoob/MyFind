@@ -1,6 +1,8 @@
-#include <vector>
-#include <iostream>
 #include <list>
+#include <vector>
+#include <errno.h>
+#include <dirent.h>
+#include <iostream>
 
 #ifndef FINDER_H
 #define FINDER_H
@@ -16,8 +18,7 @@ private:
 
 public:
     Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::vector<std::string> fileNames);
-    void SetPid(int pid);
-    void SetFilePath(std::vector<std::string> path);
+    void SetPid(int pid) { _pid = pid; }
 
     const int GetPid() { return _pid; }
     const bool GetCaseSensitivity() { return _caseSensitiv; }
@@ -25,6 +26,7 @@ public:
 
     std::string ToLower(std::string input);
     int Find(std::string FileName, const char* path);
-    int Search(std::list<std::string> Content, std::string FileName);
-    int CaseSensitiveSearch(std::list<std::string> Content, std::string FileName);
+    bool Search(std::list<std::string> Content, std::string FileName);
+    //int Search(std::list<std::string> Content, std::string FileName);
+    //int CaseSensitiveSearch(std::list<std::string> Content, std::string FileName);
 };
