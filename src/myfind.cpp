@@ -5,6 +5,8 @@ MyFind::MyFind(/* args */)
     _programName = "";
     _caseSensitiv = false;
     _recursiveSearch = false;
+    CounterI = 0;
+    CounterR = 0;
 }
 
 void MyFind::fork() 
@@ -79,7 +81,7 @@ bool MyFind::ReadArguments(int argc, char*argv[])
     optind++;
 
     for (int c = optind; c < argc; c++)
-        _fileNames.push_back(argv[optind]);
+        _fileNames.push_back(argv[c]);
     
     //  Test ob alle Argumente richtig eingelesen und bearbeitet werden
     /*
