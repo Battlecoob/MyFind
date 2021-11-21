@@ -31,16 +31,19 @@ int main(int argc, char* argv[])
         finder.SetPid(fork());
         switch(finder.GetPid())
         {
-            case '-1':
+            case -1:
                 std::cout << "Child konnte nicht gestartet werden." << std::endl;
                 exit(EXIT_FAILURE);
+                break;
+            case 0:
+                // suchfunktion
                 break;
             default:
                 std::cout << "Child with PID: " << finder.GetPid() << "created." << std::endl;
                 // parent();
                 break;
         }
-
     }
+
     return 0;
 }
