@@ -117,6 +117,9 @@ bool MyFind::ReadArguments(int argc, char*argv[])
         std::cout << "File: " << _fileNames[i] << std::endl;
     }
     */
+        
+    // TEST: soll ausserhalb von der methode aufgerufen werden
+    myFork();
     
     return true;
 }
