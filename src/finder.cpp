@@ -18,35 +18,30 @@ std::string Finder::ToLower(std::string input)
 
 bool Finder::Search(std::list<std::string> Content, std::string FileName)
 {
-    if(_caseSensitiv) std::string LowerCaseFileName = ToLower(FileName);
+    if(_caseSensitiv) FileName = ToLower(FileName);
 
     for(auto it = Content.begin(); it != Content.end(); it++) 
     {
         std::string current = *it;
-        if(_caseSensitiv) current = ToLower(current);
+        if(_caseSensitiv) 
+            current = ToLower(current);
         if(current.compare(FileName) == 0)
-        {
-            std::cout << "found file " << FileName << std::endl;;
-            break;
-        }
+            return true;
+
     }
+    return false;
 }
 
-int Finder::Find(std::string FileName, const char* path)
+int Finder::Find(std::string FileName, const char* path, int id)
 {
     std::list<std::string> content;
-    bool recursive = false;
     struct dirent *direntp;
     DIR *dirp;
-    if((dirp = opendir(path)) == NULL) {
+    if((dirp = opendir(path)) == NULL)
         perror("Failed to open");
-    }
 
     while ((direntp = readdir(dirp)) != NULL)
-    {
         content.push_back(direntp->d_name);
-    }
-
 
     /*
     for(auto it = content.begin(); it != content.end(); it++) {
@@ -58,56 +53,25 @@ int Finder::Find(std::string FileName, const char* path)
     content.remove(".");
     content.remove("..");
 
-    if (recursive) {
-    DIR *recpDir;
-        for(auto it = content.begin(); it != content.end(); it++) {
+    if (_recursiveSearch)
+    {
+        DIR *recpDir;
+        for(auto it = content.begin(); it != content.end(); it++) 
+        {
             std::string current = *it;
             const char* sub_path = current.c_str();
-            if((recpDir = opendir(sub_path)) == NULL) {
-
-            }
-            else {
-                Find(FileName, sub_path);
-            }   
+            if((recpDir = opendir(sub_path)) != NULL) 
+                Find(FileName, sub_path, id);
         }
     }
 
-    Search(content,FileName);
+    if(Search(content,FileName))
+       Print(path, FileName, id);
 
     return 0;
 }
 
-/*
-int Finder::Search(std::list<std::string> Content, std::string FileName)
+const void Finder::Print(std::string path, std::string FileName, int id) 
 {
-    for(auto it = Content.begin(); it != Content.end(); it++) 
-    {
-        std::string current = *it;
-        if(current.compare(FileName) == 0)
-        {
-            std::cout << "found file " << FileName << std::endl;;
-            break;
-        }
-    }
-
-    return 0;
+    std::cout<<id<<" : "<<FileName<<" : "<<path<<std::endl;
 }
-
-int Finder::CaseSensitiveSearch(std::list<std::string> Content, std::string FileName)
-{
-    std::string lowercaseFilename = ToLower(FileName);
-
-    for(auto it = Content.begin(); it != Content.end(); it++)
-    {
-        std::string current = *it;
-        current = ToLower(current);
-        if(current.compare(lowercaseFilename) == 0)
-        {
-            std::cout<<"found insensitive file "<<FileName<<std::endl;;
-            break;
-        }
-    }
-    
-    return 0;
-}
-*/

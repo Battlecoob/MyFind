@@ -19,7 +19,6 @@ private:
     std::vector<std::string> _fileNames;
     bool _caseSensitiv, _recursiveSearch;
 
-    void fork();
     void myFork();
     void printUsage();
     void printOutput();

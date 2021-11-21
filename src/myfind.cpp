@@ -9,11 +9,6 @@ MyFind::MyFind(/* args */)
     CounterR = 0;
 }
 
-void MyFind::fork() 
-{
-    // not implemented
-}
-
 void MyFind::myFork()
 {
     int status = 0;
@@ -39,11 +34,6 @@ void MyFind::myFork()
     while ((wpid = wait(&status)) > 0);
 }
 
-void MyFind::waitForChildren()
-{
-    // not implemented
-}
-
 void MyFind::printUsage()
 {
     std::cout << "Usage: " << _programName << " [-R] [-i] searchpath filename1 [filename2] ...[filenameN]" << std::endl;
@@ -59,6 +49,7 @@ void MyFind::KillTheUndead()
     // not implemented
 }
 
+// NOT IN USE
 Finder MyFind::createFinder()
 {
     Finder finder(_caseSensitiv, _recursiveSearch, _filePath, _fileNames);
