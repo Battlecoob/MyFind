@@ -14,6 +14,30 @@ void MyFind::fork()
     // not implemented
 }
 
+void MyFind::myFork()
+{
+    int status = 0;
+    pid_t pid, wpid;
+    const char* path = _filePath.c_str();
+    Finder finder(_caseSensitiv, _recursiveSearch, _filePath, _fileNames);
+
+    for(int i=0; i < _fileNames.size(); i++)
+    {
+        //std::cout<<i<<std::endl;    
+        pid = fork();
+        // switch
+        if (pid == 0)
+        {
+            int cid = (int)getpid();
+            finder.Find(_fileNames[i],path,cid);
+            break;
+        }
+        else {
+        
+        }
+    }
+    while ((wpid = wait(&status)) > 0);
+}
 
 void MyFind::waitForChildren()
 {

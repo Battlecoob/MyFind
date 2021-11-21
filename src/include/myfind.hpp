@@ -20,6 +20,7 @@ private:
     bool _caseSensitiv, _recursiveSearch;
 
     void fork();
+    void myFork();
     void printUsage();
     void printOutput();
     void waitForChildren();
