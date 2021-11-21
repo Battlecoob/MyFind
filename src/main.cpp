@@ -27,7 +27,20 @@ int main(int argc, char* argv[])
     // wenn argumente eingegeben wurden, starte das programm
     if(myFind.ReadArguments(argc, argv))
     {
-        myFind.createFinder();
+        Finder finder = myFind.createFinder();
+        finder.SetPid(fork());
+        switch(finder.GetPid())
+        {
+            case '-1':
+                std::cout << "Child konnte nicht gestartet werden." << std::endl;
+                exit(EXIT_FAILURE);
+                break;
+            default:
+                std::cout << "Child with PID: " << finder.GetPid() << "created." << std::endl;
+                // parent();
+                break;
+        }
+
     }
     return 0;
 }
