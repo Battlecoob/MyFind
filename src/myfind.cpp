@@ -37,7 +37,12 @@ void MyFind::MyFork()
                 if(finder.DeterminePath(finder.GetPath()))
                     exit(EXIT_SUCCESS);
                 else
+                {
+                    if(!finder.GetFound())
+                        std::cout << finder.GetFileName() << " couldn't be found." << std::endl;
+                    
                     exit(EXIT_FAILURE);
+                }
             default:    //parent
                 // std::cout << "Child with PID: " << tmpPid << " for " << _fileNames[c] << " created." << std::endl;
                 _childProcesses.push_back(tmpPid);

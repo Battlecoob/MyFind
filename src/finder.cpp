@@ -10,7 +10,7 @@ Finder::Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::s
     _recursiveSearch = recursiveSearch;
 }
 
-const void Finder::PrintPath() 
+const void Finder::PrintResult() 
 {
     std::cout << "<" << _pid << ">: <" << _fileName << ">: <" << _filePath << ">"<< std::endl;
 }
@@ -23,18 +23,16 @@ bool Finder::DeterminePath(std::string path)
         return false;
     
     struct dirent *direntp;
-    std::string fileToSearch;
 
     while ((direntp = readdir(dirp)) != NULL && !_found)
     {
         if(strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0)
         {
             std::string tmpPath = path + "/" + direntp->d_name;
-            fileToSearch = direntp->d_name;
             
             if(SearchFile(direntp->d_name, tmpPath))
             {
-                PrintPath();
+                PrintResult();
                 closedir(dirp);
                 return true;
             }
@@ -43,9 +41,6 @@ bool Finder::DeterminePath(std::string path)
                 DeterminePath(tmpPath);
         }
     }
-
-    if(!_found)
-        std::cout << _fileName << " couldn't be found." << std::endl;
 
     closedir(dirp);
     return false;

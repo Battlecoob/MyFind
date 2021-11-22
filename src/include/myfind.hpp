@@ -9,7 +9,6 @@
 class MyFind
 {
 private:
-    // selbe var wie finder - code duplication...
     std::string _filePath;
     int _counterR, _counterI;
     std::string _programName;

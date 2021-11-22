@@ -24,11 +24,13 @@ public:
     void SetPid(int pid) { _pid = pid; }
 
     const int GetPid() { return _pid; }
+    const bool GetFound() { return _found; }
     const std::string GetPath() { return _filePath; }
+    const std::string GetFileName() { return _fileName; }
     const bool GetCaseSensitivity() { return _caseSensitiv; }
     const bool GetRecursiveSearch() { return _recursiveSearch; }
 
-    const void PrintPath();
+    const void PrintResult();
     bool DeterminePath(std::string path);
     std::string ToLower(std::string input);
     bool SearchFile(std::string fileToSearch, std::string tmpPath);
