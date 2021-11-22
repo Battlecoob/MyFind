@@ -116,6 +116,13 @@ bool MyFind::ReadArguments(int argc, char*argv[])
         return false;
     }
 
+    // program needs 3 arguments: program, path, file
+    if((argc - (_counterI + _counterR)) < 3)
+    {
+        printUsage();
+        return false;
+    }
+
     // use absolute path
     char c[PATH_MAX];
     char *p = realpath(argv[optind], c); //turns the path into an absolute path

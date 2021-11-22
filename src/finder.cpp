@@ -12,7 +12,7 @@ Finder::Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::s
 
 const void Finder::PrintResult() 
 {
-    std::cout << "<" << _pid << ">: <" << _fileName << ">: <" << _filePath << ">"<< std::endl;
+    std::cout << _pid << ": " << _fileName << ": " << _filePath << std::endl;
 }
 
 bool Finder::DeterminePath(std::string path)
