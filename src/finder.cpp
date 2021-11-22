@@ -2,11 +2,12 @@
 
 Finder::Finder(pid_t pid, bool caseSensitiv, bool recursiveSearch, std::string path, std::string fileName)
 {
+    _found = false;
     _pid = getpid();
-    _caseSensitiv = caseSensitiv;
-    _recursiveSearch = recursiveSearch;
     _filePath = path;
     _fileName = fileName;
+    _caseSensitiv = caseSensitiv;
+    _recursiveSearch = recursiveSearch;
 }
 
 std::string Finder::ToLower(std::string input)
@@ -30,6 +31,7 @@ bool Finder::Search(std::string fileToSearch, std:: string tmpPath)
     if(fileToSearch == tmpString)
     {
         _filePath = tmpPath;
+        _found = true;
         return true;
     }
 
@@ -46,7 +48,7 @@ bool Finder::Find(std::string path) // anderer methoden name! extrem verwirrend 
     struct dirent *direntp;
     std::string fileToSearch;
 
-    while ((direntp = readdir(dirp)) != NULL)
+    while ((direntp = readdir(dirp)) != NULL && !_found)
     {
         if(strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0)
         {
@@ -55,7 +57,7 @@ bool Finder::Find(std::string path) // anderer methoden name! extrem verwirrend 
             
             if(Search(direntp->d_name, tmpPath))
             {
-                Print();
+                PrintPath();
                 closedir(dirp);
                 return true;
             }
@@ -64,6 +66,7 @@ bool Finder::Find(std::string path) // anderer methoden name! extrem verwirrend 
                 Find(tmpPath);
         }
     }
+
     closedir(dirp);
     return false;
 
@@ -75,7 +78,8 @@ bool Finder::Find(std::string path) // anderer methoden name! extrem verwirrend 
     // }
 }
 
-const void Finder::Print() 
+const void Finder::PrintPath() 
 {
-    std::cout << _pid << " : " << _fileName << " : " << _filePath << std::endl;
+    // std::cout << _pid << " : " << _fileName << " : " << _filePath << std::endl;
+    std::cout << "<" << _pid << ">: <" << _fileName << ">: <" << _filePath << ">"<< std::endl;
 }
