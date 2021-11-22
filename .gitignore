@@ -1,0 +1,6 @@
+# Prerequisites
+*.d
+
+# Visual Studio Code
+.vscode/*
+
