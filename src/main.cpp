@@ -20,7 +20,6 @@ using std::string; using std::cerr;
 
 int main(int argc, char* argv[])
 {
-    std::cout << "Starting MyFind..." << std::endl;
     MyFind myFind;
     
     // wenn argumente eingegeben wurden, starte das programm
@@ -29,7 +28,6 @@ int main(int argc, char* argv[])
         myFind.MyFork();
         myFind.WaitForChildren(); // infinite loop, until child processes finish
         myFind.KillTheUndead();
-        std::cout << "Terminating MyFind..." << std::endl;
     }
     else
         std::cout << "An error occurred during the input." << std::endl;

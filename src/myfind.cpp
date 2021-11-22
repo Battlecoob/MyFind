@@ -27,7 +27,7 @@ void MyFind::MyFork()
                 else
                     exit(EXIT_FAILURE);
             default:
-                std::cout << "Child with PID: " << tmpPid << " for " << _fileNames[c] << " created." << std::endl;
+                // std::cout << "Child with PID: " << tmpPid << " for " << _fileNames[c] << " created." << std::endl;
                 _childProcesses.push_back(tmpPid); // tmpPid
                 break;
         }
@@ -113,7 +113,17 @@ bool MyFind::ReadArguments(int argc, char*argv[])
         return false;
     }
 
-    _filePath = argv[optind];
+    // use absolute path
+    char c[PATH_MAX];
+    char *p = realpath(argv[optind], c);
+    if(p)
+        _filePath = p;
+    else
+    {
+        perror("realpath(): ");
+        return false;
+    }
+    
     optind++;
 
     for (int c = optind; c < argc; c++)

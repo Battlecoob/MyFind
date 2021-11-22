@@ -2,6 +2,7 @@
 #include <vector>
 #include <assert.h>
 #include <iostream>
+#include <limits.h> // PATH_MAX
 #include <unistd.h> // getopt();
 #include "finder.hpp"
 
