@@ -11,13 +11,13 @@
 class Finder
 {
 private:
-    int _pid;
+    pid_t _pid;
     bool _caseSensitiv, _recursiveSearch;
     std::string _filePath;
-    std::vector<std::string> _fileNames;
+    std::string _fileName;
 
 public:
-    Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::vector<std::string> fileNames);
+    Finder(pid_t pid, bool caseSensitiv, bool recursiveSearch, std::string path, std::string fileName);
     
     void SetPid(int pid) { _pid = pid; }
 
@@ -26,8 +26,9 @@ public:
     const bool GetRecursiveSearch() { return _recursiveSearch; }
 
     std::string ToLower(std::string input);
+    int Find();
+    const void Print();
     int Find(std::string FileName, const char* path, int id);
-    const void Print(std::string path, std::string FileName, int id);
     bool Search(std::list<std::string> Content, std::string FileName);
     //int Search(std::list<std::string> Content, std::string FileName);
     //int CaseSensitiveSearch(std::list<std::string> Content, std::string FileName);

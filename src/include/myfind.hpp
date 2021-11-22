@@ -19,7 +19,6 @@ private:
     std::vector<std::string> _fileNames;
     bool _caseSensitiv, _recursiveSearch;
 
-    void myFork();
     void printUsage();
     void printOutput();
     void waitForChildren();
@@ -33,7 +32,8 @@ public:
     const bool GetCaseSensitivity() { return _caseSensitiv; }
     const bool GetRecursiveSearch() { return _recursiveSearch; }
     
+    bool MyFork();
     void KillTheUndead();
-    Finder createFinder();
+    Finder createFinder(pid_t pid, std::string fileName);
     bool ReadArguments(int argc, char* argv[]);
 };

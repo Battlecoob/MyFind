@@ -1,11 +1,12 @@
 #include "include/finder.hpp"
 
-Finder::Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::vector<std::string> fileNames)
+Finder::Finder(pid_t pid, bool caseSensitiv, bool recursiveSearch, std::string path, std::string fileName)
 {
+    _pid = pid;
     _caseSensitiv = caseSensitiv;
     _recursiveSearch = recursiveSearch;
     _filePath = path;
-    _fileNames = fileNames;
+    _fileName = fileName;
 }
 
 std::string Finder::ToLower(std::string input)
@@ -32,12 +33,16 @@ bool Finder::Search(std::list<std::string> Content, std::string FileName)
     return false;
 }
 
-int Finder::Find(std::string FileName, const char* path, int id)
+// int Finder::Find(std::string FileName, const char* path, int id)
+// bool?
+int Finder::Find() // anderer methoden name! extrem verwirrend find / search
 {
-    std::list<std::string> content;
-    struct dirent *direntp;
     DIR *dirp;
-    if((dirp = opendir(path)) == NULL)
+    struct dirent *direntp;
+    std::list<std::string> content;
+    
+    // Vorlage!
+    if((dirp = opendir(_filePath.c_str())) == NULL)
         perror("Failed to open");
 
     while ((direntp = readdir(dirp)) != NULL)
@@ -59,19 +64,22 @@ int Finder::Find(std::string FileName, const char* path, int id)
         for(auto it = content.begin(); it != content.end(); it++) 
         {
             std::string current = *it;
-            const char* sub_path = current.c_str();
-            if((recpDir = opendir(sub_path)) != NULL) 
-                Find(FileName, sub_path, id);
+            const char* subPath = current.c_str();
+            if((recpDir = opendir(subPath)) != NULL) 
+                Find();
         }
     }
 
-    if(Search(content,FileName))
-       Print(path, FileName, id);
+    if(Search(content, _fileName))
+    {
+        Print();
+        exit(EXIT_SUCCESS);
+    }
 
-    return 0;
+    return 1;
 }
 
-const void Finder::Print(std::string path, std::string FileName, int id) 
+const void Finder::Print() 
 {
-    std::cout<<id<<" : "<<FileName<<" : "<<path<<std::endl;
+    std::cout << _pid << " : " << _fileName << " : " << _filePath << std::endl;
 }
