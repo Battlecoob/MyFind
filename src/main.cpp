@@ -1,36 +1,23 @@
 /*
 * =======================================================================================================================================
 *
-*
-*                                                   Programm Description
-*
+* Program Description
 *
 * =======================================================================================================================================
 */
 
-#include <iostream>
-#include <assert.h>
-#include <unistd.h> // for getopt();
-#include <vector>
-// temp weil ich das Makefile nicht verstehe
 #include "include/myfind.hpp"
-
-using std::cout; using std::endl;
-using std::string; using std::cerr;
 
 int main(int argc, char* argv[])
 {
     MyFind myFind;
-    
-    // wenn argumente eingegeben wurden, starte das programm
-    if(myFind.ReadArguments(argc, argv))
+
+    if(myFind.ReadArguments(argc, argv))    // if all argument inputs are correct, do the actual file search
     {
-        myFind.MyFork();
-        myFind.WaitForChildren(); // infinite loop, until child processes finish
-        myFind.KillTheUndead();
+        myFind.MyFork();                    // creates childprocceses for every file
+        myFind.WaitForChildren();           // infinite loop, until child processes finish - so main func, doesn't continue
+        myFind.KillTheUndead();             // shouldn't actually happen; kills all remaining processes, that didn't terminate correctly
     }
-    else
-        std::cout << "An error occurred during the input." << std::endl;
 
     return 0;
 }

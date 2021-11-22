@@ -1,37 +1,13 @@
 #include "include/myfind.hpp"
 
-MyFind::MyFind(/* args */)
+MyFind::MyFind()
 {
-    CounterI = 0;
-    CounterR = 0;
+    _counterI = 0;
+    _counterR = 0;
+    _filePath = "";
     _programName = "";
     _caseSensitiv = false;
     _recursiveSearch = false;
-}
-
-void MyFind::MyFork()
-{
-    for (int c = 0; c < (int)_fileNames.size(); c++)
-    {
-        pid_t tmpPid = fork();
-        Finder finder = createFinder(tmpPid, _fileNames[c]);
-
-        switch (tmpPid)
-        {
-            case -1: // fehler passiert
-                std::cerr << "Child konnte nicht gestartet werden." << std::endl;
-                exit(EXIT_FAILURE);
-            case 0:
-                if(finder.Find(finder.GetPath()))
-                    exit(EXIT_SUCCESS);
-                else
-                    exit(EXIT_FAILURE);
-            default:
-                // std::cout << "Child with PID: " << tmpPid << " for " << _fileNames[c] << " created." << std::endl;
-                _childProcesses.push_back(tmpPid); // tmpPid
-                break;
-        }
-    }
 }
 
 void MyFind::printUsage()
@@ -39,10 +15,41 @@ void MyFind::printUsage()
     std::cout << "Usage: " << _programName << " [-R] [-i] searchpath filename1 [filename2] ...[filenameN]" << std::endl;
 }
 
+Finder MyFind::createFinder(std::string fileName)
+{
+    Finder finder(_caseSensitiv, _recursiveSearch, _filePath, fileName);
+    return finder;
+}
+
+void MyFind::MyFork()
+{
+    for (int c = 0; c < (int)_fileNames.size(); c++)
+    {
+        pid_t tmpPid = fork();
+        Finder finder = createFinder(_fileNames[c]);
+
+        switch (tmpPid)
+        {
+            case -1:    // error
+                std::cerr << "Child proccess couldn't be started." << std::endl;
+                exit(EXIT_FAILURE);
+            case 0:     // childprocess
+                if(finder.DeterminePath(finder.GetPath()))
+                    exit(EXIT_SUCCESS);
+                else
+                    exit(EXIT_FAILURE);
+            default:    //parent
+                // std::cout << "Child with PID: " << tmpPid << " for " << _fileNames[c] << " created." << std::endl;
+                _childProcesses.push_back(tmpPid);
+                break;
+        }
+    }
+}
+
 void MyFind::KillTheUndead()
 {
     pid_t childPid;
-    while((childPid = waitpid(-1, NULL, WNOHANG))) // warning if 1 parantheses less
+    while((childPid = waitpid(-1, NULL, WNOHANG))) // -1 -> waits for all child p.
     {
         if((childPid == -1) && (errno != EINTR))
             break;
@@ -69,13 +76,6 @@ void MyFind::WaitForChildren()
     
 }
 
-Finder MyFind::createFinder(pid_t pid, std::string fileName)
-{
-    Finder finder(pid, _caseSensitiv, _recursiveSearch, _filePath, fileName);
-    return finder;
-}
-
-// return false fehlt noch
 bool MyFind::ReadArguments(int argc, char*argv[])
 {
     int input = 0;
@@ -87,40 +87,39 @@ bool MyFind::ReadArguments(int argc, char*argv[])
         switch(input)
         {
             case 'R':
-                CounterR++;
+                _counterR++;
                 _recursiveSearch = true;
                 break;
             case 'i':
-                CounterI++;
+                _counterI++;
                 _caseSensitiv = true;
                 break;
             case '?':
-                std::cerr << _programName << " error: Unknown option." << std::endl;
                 printUsage();
-                // throw exception
-                break;
+                return false;
             default: //impossible
                 assert(0); // 0 -> logisch falsch
                 break;
         }
     }
 
-    if(CounterR > 1 || CounterI > 1) // wird auch aufgerufen wenn case '?': ... lul
+    // -R and -i should only be used once
+    if(_counterR > 1 || _counterI > 1)
     {
         std::cerr << _programName << " error: Too many arguments." << std::endl;
         printUsage();
-        //throw exception
         return false;
     }
 
     // use absolute path
     char c[PATH_MAX];
-    char *p = realpath(argv[optind], c);
+    char *p = realpath(argv[optind], c); //turns the path into an absolute path
     if(p)
         _filePath = p;
     else
     {
-        perror("realpath(): ");
+        perror("Filepath");
+        printUsage();
         return false;
     }
     

@@ -19,7 +19,7 @@ private:
     bool _caseSensitiv, _recursiveSearch, _found;
 
 public:
-    Finder(pid_t pid, bool caseSensitiv, bool recursiveSearch, std::string path, std::string fileName);
+    Finder(bool caseSensitiv, bool recursiveSearch, std::string path, std::string fileName);
     
     void SetPid(int pid) { _pid = pid; }
 
@@ -29,7 +29,7 @@ public:
     const bool GetRecursiveSearch() { return _recursiveSearch; }
 
     const void PrintPath();
-    bool Find(std::string path);
+    bool DeterminePath(std::string path);
     std::string ToLower(std::string input);
-    bool Search(std::string fileToSearch, std::string tmpPath);
+    bool SearchFile(std::string fileToSearch, std::string tmpPath);
 };

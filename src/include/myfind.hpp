@@ -1,9 +1,5 @@
-#include <list>
-#include <vector>
 #include <assert.h>
-#include <iostream>
 #include <limits.h> // PATH_MAX
-#include <unistd.h> // getopt();
 #include "finder.hpp"
 
 #ifndef MYFIND_H
@@ -15,18 +11,17 @@ class MyFind
 private:
     // selbe var wie finder - code duplication...
     std::string _filePath;
-    int CounterR, CounterI;
+    int _counterR, _counterI;
     std::string _programName;
     std::vector<pid_t> _childProcesses;
     std::vector<std::string> _fileNames;
     bool _caseSensitiv, _recursiveSearch;
 
     void printUsage();
-    void printOutput();
-    Finder createFinder(pid_t pid, std::string fileName);
+    Finder createFinder(std::string fileName);
 
 public:
-    MyFind(/* args */);
+    MyFind();
 
     void SetCaseSensitiviy(bool b) { _caseSensitiv = b; }
     void SetRecursiveSearch(bool b) { _recursiveSearch = b; }
