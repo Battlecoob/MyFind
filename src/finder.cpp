@@ -2,7 +2,7 @@
 
 Finder::Finder(pid_t pid, bool caseSensitiv, bool recursiveSearch, std::string path, std::string fileName)
 {
-    _pid = pid;
+    _pid = getpid();
     _caseSensitiv = caseSensitiv;
     _recursiveSearch = recursiveSearch;
     _filePath = path;
@@ -17,66 +17,62 @@ std::string Finder::ToLower(std::string input)
     return input;
 }
 
-bool Finder::Search(std::list<std::string> Content, std::string FileName)
+bool Finder::Search(std::string fileToSearch, std:: string tmpPath)
 {
-    if(_caseSensitiv) FileName = ToLower(FileName);
+    std::string tmpString = _fileName;
 
-    for(auto it = Content.begin(); it != Content.end(); it++) 
+    if(_caseSensitiv)
     {
-        std::string current = *it;
-        if(_caseSensitiv) 
-            current = ToLower(current);
-        if(current.compare(FileName) == 0)
-            return true;
-
+        fileToSearch = ToLower(fileToSearch);
+        tmpString = ToLower(_fileName);
     }
+
+    if(fileToSearch == tmpString)
+    {
+        _filePath = tmpPath;
+        return true;
+    }
+
     return false;
 }
 
-// int Finder::Find(std::string FileName, const char* path, int id)
-// bool?
-int Finder::Find() // anderer methoden name! extrem verwirrend find / search
+bool Finder::Find(std::string path) // anderer methoden name! extrem verwirrend find / search
 {
     DIR *dirp;
-    struct dirent *direntp;
-    std::list<std::string> content;
+
+    if((dirp = opendir(path.c_str())) == NULL)
+        return false;
     
-    // Vorlage!
-    if((dirp = opendir(_filePath.c_str())) == NULL)
-        perror("Failed to open");
+    struct dirent *direntp;
+    std::string fileToSearch;
 
     while ((direntp = readdir(dirp)) != NULL)
-        content.push_back(direntp->d_name);
-
-    /*
-    for(auto it = content.begin(); it != content.end(); it++) {
-        std::string current = *it;
-        std::cout<<current<<std::endl;
-    }
-    */
-
-    content.remove(".");
-    content.remove("..");
-
-    if (_recursiveSearch)
     {
-        DIR *recpDir;
-        for(auto it = content.begin(); it != content.end(); it++) 
+        if(strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0)
         {
-            std::string current = *it;
-            const char* subPath = current.c_str();
-            if((recpDir = opendir(subPath)) != NULL) 
-                Find();
+            std::string tmpPath = path + "/" + direntp->d_name;
+            fileToSearch = direntp->d_name;
+            
+            if(Search(direntp->d_name, tmpPath))
+            {
+                Print();
+                closedir(dirp);
+                return true;
+            }
+
+            if(_recursiveSearch)
+                Find(tmpPath);
         }
     }
+    closedir(dirp);
+    return false;
 
-    if(Search(content, _fileName))
-    {
-        Print();
-        exit(EXIT_SUCCESS);
-    }
-
-    return 1;
+    // TEST
+    // std::cout << _filePath << ": " << _fileName << std::endl;
+    // for (int c = 0; c < content.size(); c++)
+    // {
+    //     std::cout << content[c] << std::endl;
+    // }
 }
 
 const void Finder::Print() 

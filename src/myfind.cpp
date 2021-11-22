@@ -9,50 +9,35 @@ MyFind::MyFind(/* args */)
     _recursiveSearch = false;
 }
 
-bool MyFind::MyFork()
+void MyFind::MyFork()
 {
     for (int c = 0; c < (int)_fileNames.size(); c++)
     {
         pid_t tmpPid = fork();
         Finder finder = createFinder(tmpPid, _fileNames[c]);
-        // pid error handling
-            // case 0 -> starte suche
+
         switch (tmpPid)
         {
             case -1: // fehler passiert
-                std::cout << "Child konnte nicht gestartet werden." << std::endl;
+                std::cerr << "Child konnte nicht gestartet werden." << std::endl;
                 exit(EXIT_FAILURE);
-                break;
             case 0:
-                std::cout << "TmpPid: " << tmpPid << " Pid: " << finder.GetPid() << std::endl;
-                finder.Find();
-                break;
+                if(finder.Find(finder.GetPath()))
+                {
+                    std::cout << "found" << std::endl;
+                    exit(EXIT_SUCCESS);
+                }
+                else
+                {
+                    std::cout << "not found" << std::endl;
+                    exit(EXIT_FAILURE);
+                }
             default:
-                std::cout << "Child with PID: " << finder.GetPid() << " created." << std::endl;
+                std::cout << "Child with PID: " << tmpPid << " for " << _fileNames[c] << " created." << std::endl;
+                _childProcesses.push_back(tmpPid); // tmpPid
                 break;
         }
     }
-    
-
-/*
-    int status = 0;
-    pid_t tmpPid, wpid;
-    const char* tmp_path = _filePath.c_str();
-    // Finder finder(_caseSensitiv, _recursiveSearch, _filePath, _fileNames);
-
-    for(int i=0; i < _fileNames.size(); i++)
-    {
-        //std::cout<<i<<std::endl;    
-        tmpPid = fork();
-        // switch
-        if (tmpPid == 0)
-        {
-            int cid = (int)getpid();
-            finder.Find(_fileNames[i], tmp_path, cid);
-            break;
-        }
-    }
-*/
 }
 
 void MyFind::printUsage()
@@ -60,17 +45,36 @@ void MyFind::printUsage()
     std::cout << "Usage: " << _programName << " [-R] [-i] searchpath filename1 [filename2] ...[filenameN]" << std::endl;
 }
 
-void MyFind::printOutput()
-{
-    // not implemented
-}
-
 void MyFind::KillTheUndead()
 {
-    // not implemented
+    pid_t childPid;
+    while((childPid = waitpid(-1, NULL, WNOHANG))) // warning if 1 parantheses less
+    {
+        if((childPid == -1) && (errno != EINTR))
+            break;
+    }
 }
 
-// NOT IN USE
+void MyFind::WaitForChildren()
+{
+    while (_childProcesses.size() > 0) // as long as child processes exist
+    {
+        int status;
+        pid_t wpid = wait(&status);
+        for (int c = 0; c < (int)_childProcesses.size(); c++)
+        {
+            if(_childProcesses[c] == wpid)
+            {
+                // c cannot be parsed because it's an int. Workaround: Get first element of Vector  and erase the c'd element
+                _childProcesses.erase(_childProcesses.begin() + c);
+                break;
+            }
+        }
+        
+    }
+    
+}
+
 Finder MyFind::createFinder(pid_t pid, std::string fileName)
 {
     Finder finder(pid, _caseSensitiv, _recursiveSearch, _filePath, fileName);
@@ -112,6 +116,7 @@ bool MyFind::ReadArguments(int argc, char*argv[])
         std::cerr << _programName << " error: Too many arguments." << std::endl;
         printUsage();
         //throw exception
+        return false;
     }
 
     _filePath = argv[optind];
@@ -120,19 +125,5 @@ bool MyFind::ReadArguments(int argc, char*argv[])
     for (int c = optind; c < argc; c++)
         _fileNames.push_back(argv[c]);
     
-    // TEST: soll ausserhalb von der methode aufgerufen werden
-    //myFork();
-    
-    //  Test ob alle Argumente richtig eingelesen und bearbeitet werden
-    /*
-    std::cout << "Case Sens: " << _caseSensitiv << std::endl;
-    std::cout << "Recursive: " << _recursiveSearch << std::endl;
-    std::cout << "Path: " << _filePath << std::endl;
-    for (int i = 0; i < _fileNames.size(); i++)
-    {
-        std::cout << "File: " << _fileNames[i] << std::endl;
-    }
-    */
-
     return true;
 }

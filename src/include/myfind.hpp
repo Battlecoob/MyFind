@@ -16,12 +16,13 @@ private:
     std::string _filePath;
     int CounterR, CounterI;
     std::string _programName;
+    std::vector<pid_t> _childProcesses;
     std::vector<std::string> _fileNames;
     bool _caseSensitiv, _recursiveSearch;
 
     void printUsage();
     void printOutput();
-    void waitForChildren();
+    Finder createFinder(pid_t pid, std::string fileName);
 
 public:
     MyFind(/* args */);
@@ -32,8 +33,8 @@ public:
     const bool GetCaseSensitivity() { return _caseSensitiv; }
     const bool GetRecursiveSearch() { return _recursiveSearch; }
     
-    bool MyFork();
+    void MyFork();
     void KillTheUndead();
-    Finder createFinder(pid_t pid, std::string fileName);
+    void WaitForChildren();
     bool ReadArguments(int argc, char* argv[]);
 };

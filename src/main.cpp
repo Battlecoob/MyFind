@@ -21,35 +21,18 @@ using std::string; using std::cerr;
 int main(int argc, char* argv[])
 {
     std::cout << "Starting MyFind..." << std::endl;
-    // obj. instanzieren
     MyFind myFind;
     
     // wenn argumente eingegeben wurden, starte das programm
     if(myFind.ReadArguments(argc, argv))
     {
-        // fork
-        // search
         myFind.MyFork();
-        std::cout << "Wenns passt, goenn ich mir noch einen Whiskey!" << std::endl;
-        // killundead
-
-
-        // switch(finder.GetPid())
-        // {
-        //     case -1:
-        //         std::cout << "Child konnte nicht gestartet werden." << std::endl;
-        //         exit(EXIT_FAILURE);
-        //         break;
-        //     case 0:
-        //         // suchfunktion
-        //         myFind.myFork();
-        //         break;
-        //     default:
-        //         std::cout << "Child with PID: " << finder.GetPid() << "created." << std::endl;
-        //         // parent();
-        //         break;
-        // }
+        myFind.WaitForChildren(); // infinite loop, until child processes finish
+        myFind.KillTheUndead();
+        std::cout << "Terminating MyFind..." << std::endl;
     }
+    else
+        std::cout << "An error occurred during the input." << std::endl;
 
     return 0;
 }

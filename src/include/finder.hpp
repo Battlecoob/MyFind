@@ -3,6 +3,8 @@
 #include <errno.h>
 #include <dirent.h>
 #include <iostream>
+#include <unistd.h>
+#include <string.h>
 
 #ifndef FINDER_H
 #define FINDER_H
@@ -22,14 +24,12 @@ public:
     void SetPid(int pid) { _pid = pid; }
 
     const int GetPid() { return _pid; }
+    const std::string GetPath() { return _filePath; }
     const bool GetCaseSensitivity() { return _caseSensitiv; }
     const bool GetRecursiveSearch() { return _recursiveSearch; }
 
-    std::string ToLower(std::string input);
-    int Find();
     const void Print();
-    int Find(std::string FileName, const char* path, int id);
-    bool Search(std::list<std::string> Content, std::string FileName);
-    //int Search(std::list<std::string> Content, std::string FileName);
-    //int CaseSensitiveSearch(std::list<std::string> Content, std::string FileName);
+    bool Find(std::string path);
+    std::string ToLower(std::string input);
+    bool Search(std::string fileToSearch, std::string tmpPath);
 };
